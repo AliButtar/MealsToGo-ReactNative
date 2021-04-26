@@ -1,13 +1,75 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import React from "react";
+import { ThemeProvider } from "styled-components/native";
+import {
+  useFonts as useOswald,
+  Oswald_400Regular,
+} from "@expo-google-fonts/oswald";
+import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import { theme } from "./src/infrastructure/theme";
 import { RestaurantsScreen } from "./src/features/restaurants/screens/restaurants.screen";
+import { SettingsScreen } from "./src/features/settings/screens/settings.screen";
+import { MapsScreen } from "./src/features/map/screens/maps.screen";
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [oswaldLoaded] = useOswald({
+    Oswald_400Regular,
+  });
+
+  const [latoLoaded] = useLato({
+    Lato_400Regular,
+  });
+
+  if (!oswaldLoaded || !latoLoaded) {
+    return null;
+  }
+
   return (
     <>
-      <RestaurantsScreen />
-      <ExpoStatusBar style="auto"> </ExpoStatusBar>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+
+                if (route.name === "Restaurants") {
+                  iconName = focused ? "restaurant" : "restaurant-outline";
+                } else if (route.name === "Settings") {
+                  iconName = focused ? "settings" : "settings-outline";
+                } else if (route.name === "Maps") {
+                  return (
+                    <MaterialCommunityIcons
+                      name="google-maps"
+                      size={size}
+                      color={color}
+                    />
+                  );
+                }
+
+                // You can return any component that you like here!
+                return <Ionicons name={iconName} size={size} color={color} />;
+              },
+            })}
+            tabBarOptions={{
+              activeTintColor: "tomato",
+              inactiveTintColor: "gray",
+            }}
+          >
+            <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
+            <Tab.Screen name="Maps" component={MapsScreen} />
+            <Tab.Screen name="Settings" component={SettingsScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+        <ExpoStatusBar style="auto"> </ExpoStatusBar>
+      </ThemeProvider>
     </>
   );
 }
