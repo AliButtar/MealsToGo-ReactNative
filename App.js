@@ -15,8 +15,37 @@ import { theme } from "./src/infrastructure/theme";
 import { RestaurantsScreen } from "./src/features/restaurants/screens/restaurants.screen";
 import { SettingsScreen } from "./src/features/settings/screens/settings.screen";
 import { MapsScreen } from "./src/features/map/screens/maps.screen";
+import { RestaurantsContextProvider } from "./src/services/restaurants/restaurants.context";
+import { LocationContextProvider } from "./src/services/location/location.context";
 
 const Tab = createBottomTabNavigator();
+
+const TAB_ICON = {
+  Restaurants: "restaurant",
+  Maps: "google-maps",
+  Settings: "settings",
+};
+
+const tabBarIcon = (iconName) => ({ focused, size, color }) => {
+  if (iconName === "google-maps") {
+    return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+  } else {
+    return (
+      <Ionicons
+        name={focused ? iconName : `${iconName}-outline`}
+        size={size}
+        color={color}
+      />
+    );
+  }
+};
+
+const createScreenOptions = ({ route }) => {
+  const iconName = TAB_ICON[route.name];
+  return {
+    tabBarIcon: tabBarIcon(iconName),
+  };
+};
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -34,42 +63,25 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-
-                if (route.name === "Restaurants") {
-                  iconName = focused ? "restaurant" : "restaurant-outline";
-                } else if (route.name === "Settings") {
-                  iconName = focused ? "settings" : "settings-outline";
-                } else if (route.name === "Maps") {
-                  return (
-                    <MaterialCommunityIcons
-                      name="google-maps"
-                      size={size}
-                      color={color}
-                    />
-                  );
-                }
-
-                // You can return any component that you like here!
-                return <Ionicons name={iconName} size={size} color={color} />;
-              },
-            })}
-            tabBarOptions={{
-              activeTintColor: "tomato",
-              inactiveTintColor: "gray",
-            }}
-          >
-            <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
-            <Tab.Screen name="Maps" component={MapsScreen} />
-            <Tab.Screen name="Settings" component={SettingsScreen} />
-          </Tab.Navigator>
-        </NavigationContainer>
-        <ExpoStatusBar style="auto"> </ExpoStatusBar>
+        <LocationContextProvider>
+          <RestaurantsContextProvider>
+            <NavigationContainer>
+              <Tab.Navigator
+                screenOptions={createScreenOptions}
+                tabBarOptions={{
+                  activeTintColor: "tomato",
+                  inactiveTintColor: "gray",
+                }}
+              >
+                <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
+                <Tab.Screen name="Maps" component={MapsScreen} />
+                <Tab.Screen name="Settings" component={SettingsScreen} />
+              </Tab.Navigator>
+            </NavigationContainer>
+          </RestaurantsContextProvider>
+        </LocationContextProvider>
       </ThemeProvider>
+      <ExpoStatusBar style="auto"> </ExpoStatusBar>
     </>
   );
 }
