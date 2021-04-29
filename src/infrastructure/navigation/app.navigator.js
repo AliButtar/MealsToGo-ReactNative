@@ -2,7 +2,7 @@ import React from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { SettingsScreen } from "../../features/settings/screens/settings.screen";
-import { MapsScreen } from "../../features/map/screens/maps.screen";
+import { MapScreen } from "../../features/map/screens/maps.screen";
 import { RestaurantNavigator } from "./restaurants.navigator";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -49,7 +49,7 @@ export const AppNavigator = () => {
         }}
       >
         <Tab.Screen name="Restaurants" component={RestaurantNavigator} />
-        <Tab.Screen name="Maps" component={MapsScreen} />
+        <Tab.Screen name="Maps" component={MapScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>
