@@ -5,7 +5,7 @@ import { List } from "react-native-paper";
 import { RestaurantInfoCard } from "../components/restaurant-info-card.component";
 import { SafeArea } from "../../../components/utility/safe-area.component";
 
-export const RestaurantDetailScreen = ({ route, navigation }) => {
+export const RestaurantDetailScreen = ({ route }) => {
   const [breakfastExpanded, setBreakfastExpanded] = useState(false);
   const [lunchfastExpanded, setLunchfastExpanded] = useState(false);
   const [dinnerfastExpanded, setDinnerfastExpanded] = useState(false);
