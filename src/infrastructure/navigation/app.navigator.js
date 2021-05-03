@@ -1,13 +1,11 @@
 import React from "react";
-
-import { NavigationContainer } from "@react-navigation/native";
-import { SettingsScreen } from "../../features/settings/screens/settings.screen";
-import { MapScreen } from "../../features/map/screens/maps.screen";
-import { RestaurantNavigator } from "./restaurants.navigator";
-
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import { SettingsScreen } from "../../features/settings/screens/settings.screen";
+import { MapScreen } from "../../features/map/screens/maps.screen";
+import { RestaurantNavigator } from "./restaurants.navigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,18 +38,16 @@ const createScreenOptions = ({ route }) => {
 
 export const AppNavigator = () => {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={createScreenOptions}
-        tabBarOptions={{
-          activeTintColor: "tomato",
-          inactiveTintColor: "gray",
-        }}
-      >
-        <Tab.Screen name="Restaurants" component={RestaurantNavigator} />
-        <Tab.Screen name="Maps" component={MapScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Tab.Navigator
+      screenOptions={createScreenOptions}
+      tabBarOptions={{
+        activeTintColor: "tomato",
+        inactiveTintColor: "gray",
+      }}
+    >
+      <Tab.Screen name="Restaurants" component={RestaurantNavigator} />
+      <Tab.Screen name="Maps" component={MapScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
+    </Tab.Navigator>
   );
 };
