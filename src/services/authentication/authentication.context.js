@@ -1,4 +1,5 @@
 import React, { useState, createContext } from "react";
+import * as firebase from "firebase";
 
 import {
   loginRequest,
@@ -14,12 +15,12 @@ export const AuthenticationContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
-  checkAuthorizationState((usr) => {
+  firebase.auth().onAuthStateChanged((usr) => {
     if (usr) {
       setUser(usr);
       setIsLoading(false);
     } else {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   });
 

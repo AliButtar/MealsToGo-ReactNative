@@ -9,7 +9,7 @@ export const registerRequest = (email, password) => {
 };
 
 export const checkAuthorizationState = () => {
-  return firebase.auth().onAuthStateChanged;
+  return firebase.auth.checkAuthorizationState;
 };
 
 export const signOut = () => {

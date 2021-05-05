@@ -41,13 +41,13 @@ export const FavouritesContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      loadFavourites(user.user.uid);
+      loadFavourites(user.uid);
     }
   }, [user]);
 
   useEffect(() => {
     if (user) {
-      saveFavourites(favourites, user.user.uid);
+      saveFavourites(favourites, user.uid);
     }
   }, [favourites, user]);
 
