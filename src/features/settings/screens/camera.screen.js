@@ -1,12 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Camera } from "expo-camera";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
+import styled from "styled-components/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { SafeArea } from "../../../components/utility/safe-area.component";
+import { Text } from "../../../components/typography/text.component";
+import { AuthenticationContext } from "../../../services/authentication/authentication.context";
 
-export const CameraScreen = () => {
+const ProfileCamera = styled(Camera)`
+  width: 100%;
+  height: 100%;
+  flex: 1;
+`;
+
+const InnerSnap = styled.View`
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+`;
+
+export const CameraScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const cameraRef = useRef();
+  const { user } = useContext(AuthenticationContext);
+
+  const snap = async () => {
+    if (cameraRef) {
+      const photo = await cameraRef.current.takePictureAsync();
+      AsyncStorage.setItem(`${user.uid}-photo`, photo.uri);
+      navigation.goBack();
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -22,22 +46,14 @@ export const CameraScreen = () => {
     return <Text>No access to camera</Text>;
   }
   return (
-    <View>
-      <Camera type={type}>
-        <View style={{ width: "100%", height: "100%" }}>
-          <TouchableOpacity
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}
-          >
-            <Text style={{ color: "white" }}> Flip </Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
-    </View>
+    <ProfileCamera
+      ref={(camera) => (cameraRef.current = camera)}
+      type={Camera.Constants.Type.front}
+      ratio={"16:9"}
+    >
+      <TouchableOpacity onPress={snap}>
+        <InnerSnap />
+      </TouchableOpacity>
+    </ProfileCamera>
   );
 };
